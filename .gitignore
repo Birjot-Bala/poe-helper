@@ -1,0 +1,13 @@
+# Ignore environment variables and batch file
+*.env
+*.bat
+
+# Virtual environment
+*.venv
+
+# VS Code settings
+*.vscode
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
