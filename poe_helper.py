@@ -39,6 +39,7 @@ search2 = {
          
     
 response1 = search_trade(search, poe_trade_api)
-print(response1)
+print('\n\n'.join([item.item_info() for item in response1]))
+
 
 #response2 = search_trade(search2, poe_trade_api)

@@ -1,6 +1,6 @@
 import requests
 
-from constants import BASE_URL, league
+from constants import TRADE_BASE_URL, league
 
 
 class ApiRequests:
@@ -158,7 +158,9 @@ class ListingObject:
 
 def search_trade(search_info, trade_api, league=league):
     """
-    Searches trade API for the first 5 related results.
+    Searches trade API for the first 10 related results.
+
+    Converts API listings to ListingObjects
     
     Args:
         search_info (dict | json): Form data for the search.
@@ -166,20 +168,17 @@ def search_trade(search_info, trade_api, league=league):
         league (str): Current Path of Exile league.
     
     Returns:
-        A dict of the response from the trade API.
+        A list of ListingObjects.
     """
     post_response = trade_api.post('search/' + league, search_info)
     post_response = post_response.json()
     if 'error' in post_response:
         return post_response
     else:
-        result = ','.join(post_response['result'][:5])
+        result = ','.join(post_response['result'][:10])
         get_response = poe_trade_api.get('fetch/' + result, params={'query': post_response['id']})
         get_response = get_response.json()
-        all_listings = []
-        for item in get_response['result']:
-            listing = ListingObject.filter_dict(item) 
-            all_listings.append(listing.item_info())
-        return (f'\n{"="*60}\n'.join(all_listings))
+        item_list = [ListingObject.filter_dict(item) for item in get_response['result']]
+        return item_list
 
-poe_trade_api = ApiRequests(BASE_URL)
+poe_trade_api = ApiRequests(TRADE_BASE_URL)
