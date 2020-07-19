@@ -1,52 +1,72 @@
+# services.py
+"""Access, filter and process API data.
+
+Classes:
+    ApiRequests
+    ListingObjects
+
+Functions:
+    search_trade
+    format_search_query
+
+"""
+
 import requests
 
 from constants import TRADE_BASE_URL, league
 
 
 class ApiRequests:
-    """
-    Class for easy management of API URLs for GET and POST requests.
+    """Class for easy management of API URLs for GET and POST requests.
 
     Args:
         base_url (str): The base API URL without endpoints.
+
     """
 
     def __init__(self, base_url):
         """The constructor for the ApiRequests class."""
-        self.base_url = base_url 
-    
+        self.base_url = base_url
+
     # post request to API endpoint with json query
     def post(self, endpoint, payload):
-        """
-        Sends a POST request to an endpoint with a payload.
-        
+        """Sends a POST request to an endpoint with a payload.
+
         Args:
             endpoint (str): The API endpoint.
-            payload (json | dict): Payload to be sent with POST request. 
+            payload (json | dict): Payload to be sent with POST request.
+
+        Returns:
+            request.Response object from post request.
+
         """
-        post_url  = self.base_url + endpoint
+        post_url = self.base_url + endpoint
         post_response = requests.post(post_url, json=payload)
         return post_response
-    
-    # get request to API endpoint with optional parameters 
+
+    # get request to API endpoint with optional parameters
     def get(self, endpoint, params=None):
-        """
-        Sends a GET request to an endpoint with parameters and any cookies.
+        """Sends a GET request to an endpoint with parameters and any cookies.
 
         Args:
             endpoint (str): The API endpoint.
             params (dict): Optional key-value pairs for query string parameters, defaults to None.
+
+        Returns:
+            request.Response object from get request.
+
         """
         get_url = self.base_url + endpoint
         get_response = requests.get(get_url, params=params)
         return get_response
 
+
 class ListingObject:
-    """
-    Class for accessing and formatting the trade API response data.
+    """Class for accessing and formatting the trade API response data.
 
     Args:
         search_result (dict): Individual listing from trade API response.
+
     """
 
     @classmethod
@@ -54,8 +74,8 @@ class ListingObject:
         keys = (
             'name', 'typeLine', 'identified', 'ilvl', 'frameType', 'corrupted',
             'requirements', 'explicitMods', 'implicitMods', 'sockets', 'properties'
-            )
-        df = {key : val for key, val in d['item'].items() if key in keys}
+        )
+        df = {key: val for key, val in d['item'].items() if key in keys}
         df['price'] = d['listing']['price']
         return cls(df)
 
@@ -68,7 +88,7 @@ class ListingObject:
         price_dict = self.listing["price"]
         price = f'{price_dict["type"]} {price_dict["amount"]} {price_dict["currency"]}'
         return price
-    
+
     def rarity_type(self):
         """Returns the rarity of the item as a string."""
         rarity_dict = {0: 'Normal', 1: 'Magic', 2: 'Rare', 3: 'Unique'}
@@ -95,7 +115,7 @@ class ListingObject:
             return formatted_requirements
         else:
             return None
-    
+
     def format_sockets(self):
         """Formats the sockets, if they exist, into a string."""
         if 'sockets' in self.listing:
@@ -115,19 +135,21 @@ class ListingObject:
     def format_implicitMods(self):
         """Format implicit mods, if they exist, into a string."""
         if 'implicitMods' in self.listing:
-            formatted_implicitMods = '\n'.join(self.listing['implicitMods']) + '\n' + '-'*60
+            formatted_implicitMods = '\n'.join(
+                self.listing['implicitMods']) + '\n' + '-'*60
             return formatted_implicitMods
         else:
             return None
-    
+
     def format_explicitMods(self):
         """Format explicit mods, if they exist, into a string."""
         if 'explicitMods' in self.listing:
-            formatted_explicitMods = '\n'.join(self.listing['explicitMods']) + '\n' + '-'*60
+            formatted_explicitMods = '\n'.join(
+                self.listing['explicitMods']) + '\n' + '-'*60
             return formatted_explicitMods
         else:
             return None
-    
+
     def check_corruption(self):
         """Check if the item is corrupted."""
         if 'corrupted' in self.listing:
@@ -146,29 +168,32 @@ class ListingObject:
     def item_info(self):
         """Returns the relevant item information."""
         item_info = [
-            self.rarity_type(), self.listing['name'], self.listing['typeLine'], '-'*60,
+            self.rarity_type(
+            ), self.listing['name'], self.listing['typeLine'], '-'*60,
             self.format_properties(), self.format_requirements(), self.format_sockets(),
-            f'Item Level: {self.listing["ilvl"]}', '-'*60, self.format_implicitMods(),
+            f'Item Level: {self.listing["ilvl"]}', '-' *
+            60, self.format_implicitMods(),
             self.format_explicitMods(), self.check_corruption(), self.check_identified(),
             self.format_price()
-            ]
+        ]
         filtered_item_info = [info for info in item_info if info is not None]
         formatted_item_info = '\n'.join(filtered_item_info)
         return formatted_item_info
 
-def search_trade(search_info, trade_api, league=league):
-    """
-    Searches trade API for the first 10 related results.
 
-    Converts API listings to ListingObjects
-    
+def search_trade_api(search_info, trade_api, league=league):
+    """Searches trade API for the first 10 related results.
+
+    Converts API listings to ListingObjects.
+
     Args:
         search_info (dict | json): Form data for the search.
         trade_api (ApiRequests object): API Request object of the trade API.
         league (str): Current Path of Exile league.
-    
+
     Returns:
         A list of ListingObjects.
+
     """
     post_response = trade_api.post('search/' + league, search_info)
     post_response = post_response.json()
@@ -176,9 +201,43 @@ def search_trade(search_info, trade_api, league=league):
         return post_response
     else:
         result = ','.join(post_response['result'][:10])
-        get_response = poe_trade_api.get('fetch/' + result, params={'query': post_response['id']})
+        get_response = poe_trade_api.get(
+            'fetch/' + result, params={'query': post_response['id']})
         get_response = get_response.json()
-        item_list = [ListingObject.filter_dict(item) for item in get_response['result']]
+        item_list = [ListingObject.filter_dict(
+            item) for item in get_response['result']]
         return item_list
+
+
+def format_search_query(item_name, item_type):
+    """Formats the search query into a dictionary for post requests.
+
+    Args:
+        item_name (str): Name of the item.
+        item_type (str): Type of the item.
+
+    Returns:
+        A dictionary with search query parameters.
+
+    """
+
+    search_query_dict = {
+        "query": {
+            "status": {
+                "option": "online"
+            },
+            "name": item_name,
+            "type": item_type,
+            "stats": [{
+                "type": "and",
+                "filters": []
+            }]
+        },
+        "sort": {
+            "price": "asc"
+        }
+    }
+    return search_query_dict
+
 
 poe_trade_api = ApiRequests(TRADE_BASE_URL)

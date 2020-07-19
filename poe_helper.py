@@ -1,45 +1,9 @@
 # poe_helper.py
 
-from services import poe_trade_api, search_trade
-
-search = {
-    "query": {
-        "status": {
-            "option": "online"
-        },
-        "name": "The Pariah",
-        "type": "Unset Ring",
-        "stats": [{
-            "type": "and",
-            "filters": []
-        }]
-    },
-    "sort": {
-        "price": "asc"
-    }
-}
+from services import poe_trade_api, search_trade_api, format_search_query
 
 
-search2 = {
-    "query": {
-        "status": {
-            "option": "online"
-        },
-        "name": "Bloodbond",
-        "type": "Bone Armour",
-        "stats": [{
-            "type": "and",
-            "filters": []
-        }]
-    },
-    "sort": {
-        "price": "asc"
-    }
-}
-         
-    
-response1 = search_trade(search, poe_trade_api)
-print('\n\n'.join([item.item_info() for item in response1]))
+search_pariah = format_search_query("The Pariah", "Unset Ring")
+response_pariah = search_trade_api(search_pariah, poe_trade_api)
 
-
-#response2 = search_trade(search2, poe_trade_api)
+print('\n\n'.join([item.item_info() for item in response_pariah]))
