@@ -201,7 +201,7 @@ def search_trade_api(search_info, trade_api, league=league):
         return post_response
     else:
         result = ','.join(post_response['result'][:10])
-        get_response = poe_trade_api.get(
+        get_response = trade_api.get(
             'fetch/' + result, params={'query': post_response['id']})
         get_response = get_response.json()
         item_list = [ListingObject.filter_dict(
@@ -238,6 +238,3 @@ def format_search_query(item_name, item_type):
         }
     }
     return search_query_dict
-
-
-poe_trade_api = ApiRequests(TRADE_BASE_URL)
