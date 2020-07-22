@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-import services
+import lib.services as se
 
 # mock response class
 class MockResponse:
@@ -47,7 +47,7 @@ def mock_requests(monkeypatch):
 # mock ApiRequests class
 @pytest.fixture
 def test_ApiRequests_object(mock_requests):
-    return services.ApiRequests('https://fakeurl.com')
+    return se.ApiRequests('https://fakeurl.com')
 
 
 def test_ApiRequests_get(test_ApiRequests_object):
@@ -63,14 +63,13 @@ def test_ApiRequests_post(test_ApiRequests_object):
 def test_search_trade_api(test_ApiRequests_object):
     with open('tests/data/pariah_ring_search.json') as json_file:
         test_search = json.load(json_file)
-    test_search_output = services.search_trade_api(
+    test_search_output = se.search_trade_api(
         test_search, test_ApiRequests_object, 'fake league')
     assert isinstance(test_search_output, list) == True
     for i in test_search_output:
-        assert isinstance(i, services.ListingObject) == True
-
+        assert isinstance(i, se.ListingObject) == True
 
 def test_format_search_query():
-    test_search_query = services.format_search_query("test_name", "test_type")
+    test_search_query = se.format_search_query("test_name", "test_type")
     assert test_search_query["query"]["name"] == "test_name"
     assert test_search_query["query"]["type"] == "test_type"

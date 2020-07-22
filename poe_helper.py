@@ -1,11 +1,9 @@
 # poe_helper.py
 import tkinter as tk
 
-from constants import TRADE_BASE_URL
-from services import search_trade_api, format_search_query, ApiRequests
-
-# create api object using trade url
-poe_trade_api = ApiRequests(TRADE_BASE_URL)
+from lib.constants import TRADE_BASE_URL
+from lib.services import search_trade_api, format_search_query, poe_trade_api
+from lib.gui import Gui
 
 # # TODO: format text for search query 
 # example_text = r"""Rarity: Unique
@@ -37,12 +35,13 @@ poe_trade_api = ApiRequests(TRADE_BASE_URL)
 # print(example_list)
 # example_list = example_list[0].split('\n')
 # print(example_list)
+# item_rarity = example_list[0]
 # item_name = example_list[1]
 # item_type = example_list[2]
 
-# search for item
-search_pariah = format_search_query("The Pariah", "Unset Ring")
-response_pariah = search_trade_api(search_pariah, poe_trade_api)
+gui = Gui()
 
-# print results
-print('\n\n'.join([item.item_info() for item in response_pariah]))
+gui.master.title('POE Helper')
+gui.master.resizable(False,False)
+
+gui.mainloop()

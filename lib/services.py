@@ -13,7 +13,7 @@ Functions:
 
 import requests
 
-from constants import TRADE_BASE_URL, league
+from lib.constants import TRADE_BASE_URL, league
 
 
 class ApiRequests:
@@ -238,3 +238,13 @@ def format_search_query(item_name, item_type):
         }
     }
     return search_query_dict
+
+def format_clipboard(text):
+    split_text = text.split('--------')
+    split_text_name =split_text[0].split('\n')
+    item_rarity = split_text_name[0]
+    item_name = split_text_name[1]
+    item_type = split_text_name[2]
+    return item_name, item_type
+
+poe_trade_api = ApiRequests(TRADE_BASE_URL)
