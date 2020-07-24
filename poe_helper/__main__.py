@@ -1,8 +1,5 @@
 # poe_helper.py
-import tkinter as tk
 
-from constants import TRADE_BASE_URL
-from services import search_trade_api, format_search_query, poe_trade_api
 from gui import Gui
 
 # # TODO: format text for search query 
