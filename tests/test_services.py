@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-import lib.services as se
+import poe_helper.services as se
 
 # mock response class
 class MockResponse:

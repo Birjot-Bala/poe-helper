@@ -13,7 +13,7 @@ Functions:
 
 import requests
 
-from lib.constants import TRADE_BASE_URL, league
+from constants import TRADE_BASE_URL, league
 
 
 class ApiRequests:

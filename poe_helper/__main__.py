@@ -1,9 +1,9 @@
 # poe_helper.py
 import tkinter as tk
 
-from lib.constants import TRADE_BASE_URL
-from lib.services import search_trade_api, format_search_query, poe_trade_api
-from lib.gui import Gui
+from constants import TRADE_BASE_URL
+from services import search_trade_api, format_search_query, poe_trade_api
+from gui import Gui
 
 # # TODO: format text for search query 
 # example_text = r"""Rarity: Unique

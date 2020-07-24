@@ -3,7 +3,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from lib.services import format_search_query, search_trade_api, poe_trade_api, format_clipboard
+from services import format_search_query, search_trade_api, poe_trade_api, format_clipboard
 
 class Gui(ttk.Frame):
 
