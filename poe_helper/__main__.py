@@ -40,5 +40,7 @@ gui = Gui()
 
 gui.master.title('POE Helper')
 gui.master.resizable(False,False)
+gui.master.minsize(200,100)
+gui.master.grid_columnconfigure(0, weight=1)
 
 gui.mainloop()
