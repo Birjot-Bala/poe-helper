@@ -12,6 +12,9 @@ Functions:
 """
 
 import requests
+from io import BytesIO
+
+from PIL import Image, ImageTk
 
 from constants import TRADE_BASE_URL, league
 
@@ -73,15 +76,18 @@ class ListingObject:
     def filter_dict(cls, d):
         keys = (
             'name', 'typeLine', 'identified', 'ilvl', 'frameType', 'corrupted',
-            'requirements', 'explicitMods', 'implicitMods', 'sockets', 'properties'
+            'requirements', 'explicitMods', 'implicitMods', 'sockets', 'properties',
+            'icon'
         )
         df = {key: val for key, val in d['item'].items() if key in keys}
         df['price'] = d['listing']['price']
         return cls(df)
 
+
     def __init__(self, search_result):
         """The constructor for the ListingObject class."""
         self.listing = search_result
+
 
     def format_price(self):
         """Formats the price into a string."""
@@ -89,10 +95,12 @@ class ListingObject:
         price = f'{price_dict["type"]} {price_dict["amount"]} {price_dict["currency"]}'
         return price
 
+
     def rarity_type(self):
         """Returns the rarity of the item as a string."""
         rarity_dict = {0: 'Normal', 1: 'Magic', 2: 'Rare', 3: 'Unique'}
         return rarity_dict[self.listing['frameType']]
+
 
     def format_properties(self):
         """Formats the properties, if they exist, into a string."""
@@ -105,6 +113,7 @@ class ListingObject:
         else:
             return None
 
+
     def format_requirements(self):
         """Formats the requirements, if they exist, into a string."""
         if 'requirements' in self.listing:
@@ -115,6 +124,7 @@ class ListingObject:
             return formatted_requirements
         else:
             return None
+
 
     def format_sockets(self):
         """Formats the sockets, if they exist, into a string."""
@@ -132,6 +142,7 @@ class ListingObject:
         else:
             return None
 
+
     def format_implicitMods(self):
         """Format implicit mods, if they exist, into a string."""
         if 'implicitMods' in self.listing:
@@ -140,6 +151,7 @@ class ListingObject:
             return formatted_implicitMods
         else:
             return None
+
 
     def format_explicitMods(self):
         """Format explicit mods, if they exist, into a string."""
@@ -150,6 +162,7 @@ class ListingObject:
         else:
             return None
 
+
     def check_corruption(self):
         """Check if the item is corrupted."""
         if 'corrupted' in self.listing:
@@ -158,6 +171,7 @@ class ListingObject:
         else:
             return None
 
+
     def check_identified(self):
         """Check if the item is identified."""
         if 'identified' == False:
@@ -165,20 +179,24 @@ class ListingObject:
         else:
             return None
 
+
     def item_info(self):
         """Returns the relevant item information."""
         item_info = [
-            self.rarity_type(
-            ), self.listing['name'], self.listing['typeLine'], '-'*60,
+            self.rarity_type(), self.listing['name'],self.listing['typeLine'], '-'*60,
             self.format_properties(), self.format_requirements(), self.format_sockets(),
-            f'Item Level: {self.listing["ilvl"]}', '-' *
-            60, self.format_implicitMods(),
-            self.format_explicitMods(), self.check_corruption(), self.check_identified(),
-            self.format_price()
+            f'Item Level: {self.listing["ilvl"]}', '-' *60,
+            self.format_implicitMods(), self.format_explicitMods(),
+            self.check_corruption(), self.check_identified(), self.format_price()
         ]
         filtered_item_info = [info for info in item_info if info is not None]
         formatted_item_info = '\n'.join(filtered_item_info)
         return formatted_item_info
+
+
+    def item_icon(self):
+        """Returns the link to the item icon"""
+        return self.listing['icon']
 
 
 def search_trade_api(search_info, trade_api, league=league):
@@ -246,5 +264,12 @@ def format_clipboard(text):
     item_name = split_text_name[1]
     item_type = split_text_name[2]
     return item_name, item_type
+
+def image_from_url(image_url):
+    # return img from provided url
+    r = requests.get(image_url)
+    img = Image.open(BytesIO(r.content))
+    photo = ImageTk.PhotoImage(img)
+    return photo
 
 poe_trade_api = ApiRequests(TRADE_BASE_URL)
