@@ -38,7 +38,7 @@ class Gui(ttk.Frame):
         clipboard = self.clipboard_get()
 
         try:
-            item_name, item_type = format_clipboard(clipboard)
+            item_rarity, item_name, item_type = format_clipboard(clipboard)
             item_dict = format_search_query(item_name, item_type)
             trade_response = search_trade_api(item_dict, poe_trade_api)
 

@@ -222,8 +222,9 @@ def search_trade_api(search_info, trade_api, league=league):
         get_response = trade_api.get(
             'fetch/' + result, params={'query': post_response['id']})
         get_response = get_response.json()
-        item_list = [ListingObject.filter_dict(
-            item) for item in get_response['result']]
+        item_list = [
+            ListingObject.filter_dict(item) for item in get_response['result']
+        ]
         return item_list
 
 
@@ -263,7 +264,7 @@ def format_clipboard(text):
     item_rarity = split_text_name[0]
     item_name = split_text_name[1]
     item_type = split_text_name[2]
-    return item_name, item_type
+    return item_rarity, item_name, item_type
 
 def image_from_url(image_url):
     # return img from provided url
