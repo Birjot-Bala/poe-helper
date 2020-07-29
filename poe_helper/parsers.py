@@ -89,37 +89,3 @@ def _item_parser_classify(i, text_list, text_dict):
         if len(split) == 2:
             text_dict[split[0]] = split[1].strip()
             text_list.remove(i)
-
-print(item_parser("""Rarity: Rare
-Death Scalpel
-Basket Rapier
---------
-One Handed Sword
-Physical Damage: 13-30 (augmented)
-Elemental Damage: 1-4 (augmented), 2-25 (augmented)
-Critical Strike Chance: 5.50%
-Attacks per Second: 1.55
-Weapon Range: 14
---------
-Requirements:
-Level: 17
-Dex: 62
---------
-Sockets: R-G-R 
---------
-Item Level: 17
---------
-+25% to Global Critical Strike Multiplier (implicit)
---------
-+8 to Dexterity
-21% increased Physical Damage
-Adds 1 to 4 Fire Damage
-Adds 2 to 25 Lightning Damage
-+7% to Fire Resistance
-+8% to Chaos Resistance
-+32 to Accuracy Rating
---------
-Corrupted
---------
-Note: ~price 1 jewellers
-"""))
