@@ -34,6 +34,15 @@ implicit_re = re.compile(r'.*(\(implicit\))$')
 
 
 def item_parser(text):
+    """Parses item text copied from PoE Trade or the game.
+
+    Args:
+        text (str): Raw copied text.
+    
+    Returns:
+        A dictionary with parsed key, value pairs.
+    
+    """
 
     text_list = [i.lstrip("\n").splitlines() for i in text.split("--------")]
 
@@ -66,11 +75,10 @@ def item_parser(text):
     # in which case it will have flavor text as well which we can delete
 
     del text_list
-
     return text_dict
 
 
-def _dict_of_req(text_list, idx):   # for use in dict comprehension: turns the requirements into dicts as well
+def _dict_of_req(text_list, idx):   # for use in dict comprehension turns the requirements into dicts as well
     req_list = text_list[idx][1:]
     req_dict = {}
     for req in req_list:
@@ -88,8 +96,8 @@ def _item_parser_helper(text_list, text_dict):
             _item_parser_classify(i, text_list, text_dict=text_dict)
 
 
-def _item_parser_classify(i, text_list, text_dict):
-    if implicit_re.match(i) is not None: # regex match to find implicit mods
+def _item_parser_classify(i, text_list, text_dict): # identify and classify parts of the list
+    if implicit_re.match(i) is not None:    # regex match to find implicit mods
         if "implicit" not in text_dict:
             text_dict["implicitMods"] = [i]
         else:
