@@ -1,6 +1,14 @@
+"""Parse text from PoE into a dictionary.
+
+Functions:
+    item_parser
+"""
+
 import re
 
-from constants import ARMOUR_PROPERTIES, WEAPON_PROPERTIES
+# list of possible properties
+WEAPON_PROPERTIES = ["Physical Damage:", "Elemental Damage:", "Critical Strike Chance:", "Attacks per Second:", "Weapon Range:", "One Handed"]
+ARMOUR_PROPERTIES = ["Chance to Block:", "Armour:", "Energy Shield:", "Evasion Rating:"]
 
 # regex compile
 implicit_re = re.compile(r'.*(\(implicit\))$')
@@ -68,16 +76,50 @@ def _item_parser_classify(i, text_list, text_dict):
         else:
             text_dict["implicitMods"].append(i)
         text_list.remove(i)
-    elif any(prop in i for prop in ARMOUR_PROPERTIES or WEAPON_PROPERTIES):  # check to see if properties
-        if "properties" not in text_dict:   # create dict entry if it doesn't exist
-            split = i.split(":") 
-            text_dict["properties"] = {split[0]:split[1].strip()}
-        else:
-            split = i.split(":")
-            text_dict["properties"][split[0]] = split[1].strip()
+    elif any(prop in i for prop in ARMOUR_PROPERTIES and WEAPON_PROPERTIES):  # check to see if properties
+        split = i.split(":")
+        if len(split) == 2:
+            if "properties" not in text_dict:   # create dict entry if it doesn't exist
+                text_dict["properties"] = {split[0]:split[1].strip()}
+            else:
+                text_dict["properties"][split[0]] = split[1].strip()
         text_list.remove(i)
     else:   # any remaining info.. ex sockets, item level, notes
         split = i.split(":")
-        if len(split) > 1:
+        if len(split) == 2:
             text_dict[split[0]] = split[1].strip()
             text_list.remove(i)
+
+print(item_parser("""Rarity: Rare
+Death Scalpel
+Basket Rapier
+--------
+One Handed Sword
+Physical Damage: 13-30 (augmented)
+Elemental Damage: 1-4 (augmented), 2-25 (augmented)
+Critical Strike Chance: 5.50%
+Attacks per Second: 1.55
+Weapon Range: 14
+--------
+Requirements:
+Level: 17
+Dex: 62
+--------
+Sockets: R-G-R 
+--------
+Item Level: 17
+--------
++25% to Global Critical Strike Multiplier (implicit)
+--------
++8 to Dexterity
+21% increased Physical Damage
+Adds 1 to 4 Fire Damage
+Adds 2 to 25 Lightning Damage
++7% to Fire Resistance
++8% to Chaos Resistance
++32 to Accuracy Rating
+--------
+Corrupted
+--------
+Note: ~price 1 jewellers
+"""))
