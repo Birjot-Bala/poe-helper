@@ -2,13 +2,16 @@
 
 import requests
 import json
+from pathlib import Path
 
 import pytest
 
 import poe_helper.services as se
 
+data_folder = Path("tests/data/")
+
 # mock response class
-class MockResponse:
+class MockResponse():
 
     def __init__(self, json_path):
         self.path = json_path
@@ -35,10 +38,10 @@ class MockResponse:
 def mock_requests(monkeypatch):
 
     def mock_get(*args, **kwargs):
-        return MockResponse('tests/data/pariah_ring_get_response.json')
+        return MockResponse(data_folder / "pariah_ring_get_response.json")
 
     def mock_post(*args, **kwargs):
-        return MockResponse('tests/data/pariah_ring_post_response.json')
+        return MockResponse(data_folder / "pariah_ring_post_response.json")
 
     monkeypatch.setattr(requests, "get", mock_get)
     monkeypatch.setattr(requests, "post", mock_post)

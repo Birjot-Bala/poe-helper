@@ -5,8 +5,9 @@ from tkinter import ttk
 
 from services import (
     format_search_query, search_trade_api, poe_trade_api,
-    format_clipboard, image_from_url
+    image_from_url
 )
+from parsers import item_parser
 
 class Gui(ttk.Frame):
     """TODO: ADD DOCS
@@ -38,8 +39,8 @@ class Gui(ttk.Frame):
         clipboard = self.clipboard_get()
 
         try:
-            item_rarity, item_name, item_type = format_clipboard(clipboard)
-            item_dict = format_search_query(item_name, item_type)
+            parsed_item = item_parser(clipboard) 
+            item_dict = format_search_query(parsed_item["name"], parsed_item["type"])
             trade_response = search_trade_api(item_dict, poe_trade_api)
 
             for counter, item in enumerate(trade_response):
@@ -48,7 +49,7 @@ class Gui(ttk.Frame):
 
                 self.price_result_label.grid(column=1, row=counter+10, sticky="e", padx=10, pady=2)
                 self.price_title_label.grid(column=0, row=counter+10, padx=10)
-            self.price_label_frame.config(text=f'{item_name}\n{item_type}')
+            self.price_label_frame.config(text=f'{parsed_item["name"]}\n{parsed_item["type"]}')
             image_url = trade_response[0].item_icon()
             photo = image_from_url(image_url)
             self.listing_label = ttk.Label(self.price_label_frame, text="Listings:")
