@@ -183,12 +183,22 @@ class ListingObject:
     def item_info(self):
         """Returns the relevant item information."""
         item_info = [
-            self.rarity_type(), self.listing['name'],self.listing['typeLine'], '-'*60,
-            self.format_properties(), self.format_requirements(), self.format_sockets(),
-            f'Item Level: {self.listing["ilvl"]}', '-' *60,
-            self.format_implicitMods(), self.format_explicitMods(),
-            self.check_corruption(), self.check_identified(), self.format_price()
+            self.rarity_type(),
+            self.listing['name'],
+            self.listing['typeLine'],
+            '-'*60,
+            self.format_properties(),
+            self.format_requirements(), 
+            self.format_sockets(),
+            f'Item Level: {self.listing["ilvl"]}',
+            '-' *60,
+            self.format_implicitMods(),
+            self.format_explicitMods(),
+            self.check_corruption(),
+            self.check_identified(),
+            self.format_price()
         ]
+
         filtered_item_info = [info for info in item_info if info is not None]
         formatted_item_info = '\n'.join(filtered_item_info)
         return formatted_item_info
@@ -257,14 +267,6 @@ def format_search_query(item_name, item_type):
         }
     }
     return search_query_dict
-
-def format_clipboard(text):
-    split_text = text.split('--------')
-    split_text_name =split_text[0].split('\n')
-    item_rarity = split_text_name[0]
-    item_name = split_text_name[1]
-    item_type = split_text_name[2]
-    return item_rarity, item_name, item_type
 
 def image_from_url(image_url):
     # return img from provided url
