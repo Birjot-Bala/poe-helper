@@ -7,8 +7,27 @@ Functions:
 import re
 
 # list of possible properties
-WEAPON_PROPERTIES = ["Physical Damage:", "Elemental Damage:", "Critical Strike Chance:", "Attacks per Second:", "Weapon Range:", "One Handed"]
-ARMOUR_PROPERTIES = ["Chance to Block:", "Armour:", "Energy Shield:", "Evasion Rating:"]
+WEAPON_PROPERTIES = [
+    "Physical Damage:", 
+    "Elemental Damage:", 
+    "Critical Strike Chance:", 
+    "Attacks per Second:", 
+    "Weapon Range:", 
+    "One Handed", 
+    "Two Handed", 
+    "Wand", 
+    "Staff", 
+    "Dagger", 
+    "Claw",
+    "Bow"
+]
+
+ARMOUR_PROPERTIES = [
+    "Chance to Block:", 
+    "Armour:", 
+    "Energy Shield:", 
+    "Evasion Rating:"
+]
 
 # regex compile
 implicit_re = re.compile(r'.*(\(implicit\))$')
