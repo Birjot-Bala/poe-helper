@@ -48,6 +48,51 @@ Unidentified
 Note: ~price 1 chaos
 """
 
+example3 = r"""Rarity: Unique
+Unset Ring
+--------
+Sockets: G 
+--------
+Item Level: 84
+--------
+Has 1 Socket (implicit)
+--------
+Unidentified
+--------
+Note: ~b/o 20 chaos
+"""
+
+example4 = r"""Rarity: Rare
+Rift Mantle
+Sacrificial Garb
+--------
+Armour: 645 (augmented)
+Evasion Rating: 680 (augmented)
+Energy Shield: 147 (augmented)
+--------
+Requirements:
+Level: 72
+Str: 66
+Dex: 66
+Int: 66
+--------
+Sockets: R-W-G 
+--------
+Item Level: 72
+--------
++18 to Evasion Rating
+96% increased Armour, Evasion and Energy Shield
++11 to maximum Energy Shield
++62 to maximum Mana
++41% to Cold Resistance
++34% to Lightning Resistance
+21% increased Stun and Block Recovery
+--------
+Corrupted
+--------
+Note: ~price 1 chaos
+"""
+
 def format_clipboard(text):
     split_text = text.split('--------')
     split_text_name =split_text[0].split('\n')
@@ -60,7 +105,16 @@ def item_parser(text):
 
     text_list = [i.lstrip("\n").splitlines() for i in text.split("--------")]
 
-    text_dict = {text_list[idx][idx_2].strip(":") : text_list[idx][1:]  # create dictionary with key requirements and values all requirements
+    def dict_of_req(idx):   # for use in dict comprehension: turns the requirements into dicts as well
+        req_list = text_list[idx][1:]
+        req_dict ={}
+        for req in req_list:
+            x = req.split(':')
+            req_dict[x[0]] = x[1].strip()
+        del text_list[idx][1:]
+        return req_dict
+
+    text_dict = {text_list[idx].pop(idx_2).strip(":") : dict_of_req(idx)  # create dictionary with key, value "requirements", list of requirements
         for idx, sublist in enumerate(text_list) 
         for idx_2, item in enumerate(sublist) 
         if item in ["Requirements:"]
@@ -74,6 +128,7 @@ def item_parser(text):
     
     implicit_re = re.compile(r'.*(\(implicit\))$')
     text_dict["implicit"] = []
+
     for i in chain.from_iterable(text_list):
         if implicit_re.match(i) is not None: # regex match to find implicit mods
             text_dict["implicit"].append(i)
@@ -89,4 +144,6 @@ def item_parser(text):
 
 item_parser(example_text)
 item_parser(example2)
+item_parser(example3)
+item_parser(example4)
 
