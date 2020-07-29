@@ -120,21 +120,37 @@ def item_parser(text):
         if item in ["Requirements:"]
     }
 
+    text_list = list(filter(None, text_list))
+
+
     if ['Unidentified'] in text_list:
         text_dict["identified"] = False
+        text_dict["type"] = text_list[0].pop()
+        text_list.remove(['Unidentified'])
+    else:
+        text_dict["type"] = text_list[0].pop()
+        text_dict["name"] = text_list[0].pop()
+
     
     if ['Corrupted'] in text_list:
         text_dict["corrupted"] = True
+        text_list.remove(['Corrupted'])
     
     implicit_re = re.compile(r'.*(\(implicit\))$')
-    text_dict["implicit"] = []
 
-    for i in chain.from_iterable(text_list):
+    for i in text_list:
         if implicit_re.match(i) is not None: # regex match to find implicit mods
-            text_dict["implicit"].append(i)
-        split = i.split(":")
-        if len(split) > 1:
-            text_dict[split[0]] = split[1].strip()
+            if "implicit" not in text_dict:
+                text_dict["implicit"] = [i]
+            else:
+                text_dict["implicit"].append(i)
+            text_list.remove([i])
+        
+        else:
+            split = i.split(":")
+            if len(split) > 1:
+                text_dict[split[0]] = split[1].strip()
+                text_list.remove([i])
         # elif colon_re.match(i) is not None:
         #     split = i.split(":")
         #     text_dict[split[0]] = split[1].strip()
@@ -142,8 +158,10 @@ def item_parser(text):
     pprint.pprint(text_list)
     print(text_dict)
 
-item_parser(example_text)
-item_parser(example2)
-item_parser(example3)
+# item_parser(example_text)
+# print('='*60)
+# item_parser(example2)
+# print('='*60)
+# item_parser(example3)
+# print('='*60)
 item_parser(example4)
-
