@@ -1,4 +1,10 @@
 # gui.py
+"""Module contains the logic for the GUI.
+
+Classes:
+    Gui
+
+"""
 
 import tkinter as tk
 from tkinter import ttk
