@@ -2,12 +2,13 @@
 """Access, filter and process API data.
 
 Classes:
-    ApiRequests
     ListingObjects
 
 Functions:
     search_trade
     format_search_query
+    get_request
+    post_request
 
 """
 
@@ -18,40 +19,6 @@ from io import BytesIO
 from PIL import Image, ImageTk
 
 from constants import TRADE_BASE_URL, league
-
-
-def get_request(base_url, endpoint, params=None):
-    """Sends a GET request to an endpoint with parameters and any cookies.
-
-    Args:
-        endpoint (str): The API endpoint.
-        params (dict): Optional key-value pairs for query string parameters, defaults to None.
-
-    Returns:
-        request.Response object from get request.
-
-    """
-
-    get_url = urljoin(base_url, endpoint)
-    response = requests.get(get_url, params=params, timeout=5)
-    return response
-
-
-def post_request(base_url, endpoint, payload):
-    """Sends a POST request to an endpoint with a payload.
-
-    Args:
-        endpoint (str): The API endpoint.
-        payload (json | dict): Payload to be sent with POST request.
-
-    Returns:
-        request.Response object from post request.
-
-    """
-
-    post_url = urljoin(base_url, endpoint)
-    response = requests.post(post_url, json=payload)
-    return response
 
 
 class ListingObject:
@@ -264,6 +231,7 @@ def format_search_query(item_name, item_type):
         }
     }
     return search_query_dict
+    
 
 def image_from_url(image_url):
     # return img from provided url
@@ -271,4 +239,38 @@ def image_from_url(image_url):
     img = Image.open(BytesIO(r.content))
     photo = ImageTk.PhotoImage(img)
     return photo
+
+
+def get_request(base_url, endpoint, params=None):
+    """Sends a GET request to an endpoint with parameters and any cookies.
+
+    Args:
+        endpoint (str): The API endpoint.
+        params (dict): Optional key-value pairs for query string parameters, defaults to None.
+
+    Returns:
+        request.Response object from get request.
+
+    """
+
+    get_url = urljoin(base_url, endpoint)
+    response = requests.get(get_url, params=params, timeout=5)
+    return response
+
+
+def post_request(base_url, endpoint, payload):
+    """Sends a POST request to an endpoint with a payload.
+
+    Args:
+        endpoint (str): The API endpoint.
+        payload (json | dict): Payload to be sent with POST request.
+
+    Returns:
+        request.Response object from post request.
+
+    """
+
+    post_url = urljoin(base_url, endpoint)
+    response = requests.post(post_url, json=payload)
+    return response
 

@@ -47,27 +47,21 @@ def mock_requests(monkeypatch):
     monkeypatch.setattr(requests, "post", mock_post)
 
 
-# mock ApiRequests class
-@pytest.fixture
-def test_ApiRequests_object(mock_requests):
-    return se.ApiRequests('https://fakeurl.com')
-
-
-def test_ApiRequests_get(test_ApiRequests_object):
-    result = test_ApiRequests_object.get("fake endpoint")
+def test_get_request(mock_requests):
+    result = se.get_request("https://fake.url/", "fake endpoint")
     assert isinstance(result, MockResponse) == True
 
 
-def test_ApiRequests_post(test_ApiRequests_object):
-    result = test_ApiRequests_object.post("fake endpoint", "fake query")
+def test_post_request(mock_requests):
+    result = se.post_request("https://fake.url/", "fake endpoint", "fake query")
     assert isinstance(result, MockResponse) == True
 
 
-def test_search_trade_api(test_ApiRequests_object):
+def test_search_trade_api(mock_requests):
     with open('tests/data/pariah_ring_search.json') as json_file:
         test_search = json.load(json_file)
     test_search_output = se.search_trade_api(
-        test_search, test_ApiRequests_object, 'fake league')
+        test_search, 'fake league')
     assert isinstance(test_search_output, list) == True
     for i in test_search_output:
         assert isinstance(i, se.ListingObject) == True
