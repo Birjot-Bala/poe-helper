@@ -64,7 +64,7 @@ def item_parser(text):
         text_dict["corrupted"] = True
         text_list.remove(['Corrupted'])
 
-    _item_parser_helper(text_list, text_dict)
+    _item_parser_iterator(text_list, text_dict)
     text_list = list(filter(None, text_list)) # remove all empty lists after parsing
     
     if text_list:     # extract explicit mods if list is not empty
@@ -88,10 +88,10 @@ def _dict_of_req(text_list, idx):   # for use in dict comprehension turns the re
     return req_dict
 
 
-def _item_parser_helper(text_list, text_dict):
-    for i in text_list[:]:
+def _item_parser_iterator(text_list, text_dict):
+    for i in text_list[:]: # use copy of list to avoid iterating over a mutating list
         if isinstance(i, list):
-            _item_parser_helper(i, text_dict=text_dict)
+            _item_parser_iterator(i, text_dict=text_dict)
         else:
             _item_parser_classify(i, text_list, text_dict=text_dict)
 
