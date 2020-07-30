@@ -7,6 +7,7 @@ Classes:
 Functions:
     search_trade
     format_search_query
+    image_from_url
     get_request
     post_request
 
@@ -231,10 +232,18 @@ def format_search_query(item_name, item_type):
         }
     }
     return search_query_dict
-    
+
 
 def image_from_url(image_url):
-    # return img from provided url
+    """Returns a Tkinter compatible photo image from a URL.
+    
+    Args:
+        image_url (str): URL to the image.
+
+    Returns:
+        Tkinter compatible photo image.
+    
+    """
     r = requests.get(image_url)
     img = Image.open(BytesIO(r.content))
     photo = ImageTk.PhotoImage(img)
