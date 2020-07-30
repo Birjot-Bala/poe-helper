@@ -4,8 +4,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from services import (
-    format_search_query, search_trade_api, poe_trade_api,
-    image_from_url
+    format_search_query, search_trade_api, image_from_url
 )
 from parsers import item_parser
 
@@ -66,7 +65,7 @@ class Gui(ttk.Frame):
         try:
             parsed_item = item_parser(clipboard) 
             item_dict = format_search_query(parsed_item["name"], parsed_item["type"])
-            trade_response = search_trade_api(item_dict, poe_trade_api)
+            trade_response = search_trade_api(item_dict)
 
             self.create_listing_labels(trade_response)
             self.display_item_image(trade_response)

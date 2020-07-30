@@ -12,6 +12,7 @@ Functions:
 """
 
 import requests
+from requests.compat import urljoin
 from io import BytesIO
 
 from PIL import Image, ImageTk
@@ -19,49 +20,38 @@ from PIL import Image, ImageTk
 from constants import TRADE_BASE_URL, league
 
 
-class ApiRequests:
-    """Class for easy management of API URLs for GET and POST requests.
+def get_request(base_url, endpoint, params=None):
+    """Sends a GET request to an endpoint with parameters and any cookies.
 
     Args:
-        base_url (str): The base API URL without endpoints.
+        endpoint (str): The API endpoint.
+        params (dict): Optional key-value pairs for query string parameters, defaults to None.
+
+    Returns:
+        request.Response object from get request.
 
     """
 
-    def __init__(self, base_url):
-        """The constructor for the ApiRequests class."""
-        self.base_url = base_url
+    get_url = urljoin(base_url, endpoint)
+    response = requests.get(get_url, params=params, timeout=5)
+    return response
 
-    # post request to API endpoint with json query
-    def post(self, endpoint, payload):
-        """Sends a POST request to an endpoint with a payload.
 
-        Args:
-            endpoint (str): The API endpoint.
-            payload (json | dict): Payload to be sent with POST request.
+def post_request(base_url, endpoint, payload):
+    """Sends a POST request to an endpoint with a payload.
 
-        Returns:
-            request.Response object from post request.
+    Args:
+        endpoint (str): The API endpoint.
+        payload (json | dict): Payload to be sent with POST request.
 
-        """
-        post_url = self.base_url + endpoint
-        post_response = requests.post(post_url, json=payload)
-        return post_response
+    Returns:
+        request.Response object from post request.
 
-    # get request to API endpoint with optional parameters
-    def get(self, endpoint, params=None):
-        """Sends a GET request to an endpoint with parameters and any cookies.
+    """
 
-        Args:
-            endpoint (str): The API endpoint.
-            params (dict): Optional key-value pairs for query string parameters, defaults to None.
-
-        Returns:
-            request.Response object from get request.
-
-        """
-        get_url = self.base_url + endpoint
-        get_response = requests.get(get_url, params=params)
-        return get_response
+    post_url = urljoin(base_url, endpoint)
+    response = requests.post(post_url, json=payload)
+    return response
 
 
 class ListingObject:
@@ -74,6 +64,7 @@ class ListingObject:
 
     @classmethod
     def filter_dict(cls, d):
+        """Class method to filter the input dict for relevant keys."""
         keys = (
             'name', 'typeLine', 'identified', 'ilvl', 'frameType', 'corrupted',
             'requirements', 'explicitMods', 'implicitMods', 'sockets', 'properties',
@@ -209,7 +200,7 @@ class ListingObject:
         return self.listing['icon']
 
 
-def search_trade_api(search_info, trade_api, league=league):
+def search_trade_api(search_info, league=league):
     """Searches trade API for the first 10 related results.
 
     Converts API listings to ListingObjects.
@@ -223,14 +214,20 @@ def search_trade_api(search_info, trade_api, league=league):
         A list of ListingObjects.
 
     """
-    post_response = trade_api.post('search/' + league, search_info)
+    post_response = post_request(TRADE_BASE_URL, 'search/' + league, search_info)
+    # post_response = trade_api.post('search/' + league, search_info)
     post_response = post_response.json()
     if 'error' in post_response:
         return post_response
     else:
         result = ','.join(post_response['result'][:10])
-        get_response = trade_api.get(
-            'fetch/' + result, params={'query': post_response['id']})
+        get_response = get_request(
+            TRADE_BASE_URL, 'fetch/' + result, params={
+                'query': post_response['id']
+            }
+        )
+        # get_response = trade_api.get(
+        #     'fetch/' + result, params={'query': post_response['id']})
         get_response = get_response.json()
         item_list = [
             ListingObject.filter_dict(item) for item in get_response['result']
@@ -275,4 +272,3 @@ def image_from_url(image_url):
     photo = ImageTk.PhotoImage(img)
     return photo
 
-poe_trade_api = ApiRequests(TRADE_BASE_URL)
