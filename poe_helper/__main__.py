@@ -13,7 +13,7 @@ def build_gui():
     gui.mainloop()
 
 
-def main(*args):
+def main():
     build_gui()
 
 
