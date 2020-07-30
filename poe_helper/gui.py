@@ -9,10 +9,10 @@ Classes:
 import tkinter as tk
 from tkinter import ttk
 
-from services import (
+from poe_helper.services import (
     format_search_query, search_trade_api, image_from_url
 )
-from parsers import item_parser
+from poe_helper.parsers import item_parser
 
 class Gui(ttk.Frame):
     """Base class for the graphical user interface (GUI).

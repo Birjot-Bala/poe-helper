@@ -1,6 +1,6 @@
 # poe_helper.py
 
-from gui import Gui
+from poe_helper.gui import Gui
 
 def build_gui():
     gui = Gui()

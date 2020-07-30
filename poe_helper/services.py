@@ -19,7 +19,7 @@ from io import BytesIO
 
 from PIL import Image, ImageTk
 
-from constants import TRADE_BASE_URL, league
+from poe_helper.constants import TRADE_BASE_URL, league
 
 
 class ListingObject:
