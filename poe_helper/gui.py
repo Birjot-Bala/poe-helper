@@ -10,7 +10,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from poe_helper.services import (
-    format_search_query, search_trade_api, image_from_url
+    create_search_query, search_trade_api, image_from_url
 )
 from poe_helper.parsers import item_parser
 
@@ -43,6 +43,15 @@ class Gui(ttk.Frame):
             self.price_result_label.grid(column=1, row=counter+10, sticky="e", padx=10, pady=2)
             self.price_title_label.grid(column=0, row=counter+10, padx=10)
 
+    
+    def config_label_frame(self, parsed_item):
+        """Properly config the label frame."""
+        if parsed_item["Rarity"] == "Unique":
+            frame_label = f'{parsed_item["name"]}\n{parsed_item["type"]}'
+        else:
+            frame_label = f'{parsed_item["type"]}'
+        self.price_label_frame.config(text=frame_label)    
+
 
     def display_item_image(self, resp):
         """Displays the item image from the URL."""
@@ -70,12 +79,13 @@ class Gui(ttk.Frame):
 
         try:
             parsed_item = item_parser(clipboard) 
-            item_dict = format_search_query(parsed_item["name"], parsed_item["type"])
+            # item_dict = format_search_query(parsed_item["name"], parsed_item["type"])
+            item_dict = create_search_query(parsed_item)
             trade_response = search_trade_api(item_dict)
-
+            self.config_label_frame(parsed_item)
             self.create_listing_labels(trade_response)
             self.display_item_image(trade_response)
-            self.price_label_frame.config(text=f'{parsed_item["name"]}\n{parsed_item["type"]}')
+
             self.listing_label = ttk.Label(self.price_label_frame, text="Listings:")
             self.listing_label.grid(column=0, row=1)
     

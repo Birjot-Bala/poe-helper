@@ -6,7 +6,7 @@ Classes:
 
 Functions:
     search_trade
-    format_search_query
+    create_search_query
     image_from_url
     get_request
     post_request
@@ -175,7 +175,6 @@ def search_trade_api(search_info, league=league):
 
     Args:
         search_info (dict | json): Form data for the search.
-        trade_api (ApiRequests object): API Request object of the trade API.
         league (str): Current Path of Exile league.
 
     Returns:
@@ -203,12 +202,11 @@ def search_trade_api(search_info, league=league):
         return item_list
 
 
-def format_search_query(item_name, item_type):
+def create_search_query(parsed_item):
     """Formats the search query into a dictionary for post requests.
 
     Args:
-        item_name (str): Name of the item.
-        item_type (str): Type of the item.
+        parsed_item (dict): Dictionary parsed from raw clipboard text.
 
     Returns:
         A dictionary with search query parameters.
@@ -220,8 +218,6 @@ def format_search_query(item_name, item_type):
             "status": {
                 "option": "online"
             },
-            "name": item_name,
-            "type": item_type,
             "stats": [{
                 "type": "and",
                 "filters": []
@@ -231,6 +227,11 @@ def format_search_query(item_name, item_type):
             "price": "asc"
         }
     }
+
+    if parsed_item["Rarity"] == "unique":
+        search_query_dict["query"]["name"] = parsed_item["name"]
+
+    search_query_dict["query"]["type"] = parsed_item["type"]
     return search_query_dict
 
 
