@@ -218,6 +218,13 @@ def create_search_query(parsed_item):
             "status": {
                 "option": "online"
             },
+            "filters": {
+                "type_filters":{
+                    "filters":{
+                        "rarity":{}
+                    }
+                }
+            },
             "stats": [{
                 "type": "and",
                 "filters": []
@@ -232,6 +239,7 @@ def create_search_query(parsed_item):
         search_query_dict["query"]["name"] = parsed_item["name"]
 
     search_query_dict["query"]["type"] = parsed_item["type"]
+    search_query_dict["query"]["filters"]["type_filters"]["filters"]["rarity"]["option"] = parsed_item["Rarity"].lower()
     return search_query_dict
 
 
@@ -283,4 +291,3 @@ def post_request(base_url, endpoint, payload):
     post_url = urljoin(base_url, endpoint)
     response = requests.post(post_url, json=payload)
     return response
-

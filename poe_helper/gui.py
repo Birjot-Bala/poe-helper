@@ -25,6 +25,7 @@ class Gui(ttk.Frame):
         self.grid(column=0, row=0)
         self.grid_columnconfigure(0, weight=1)
         self.create_initial_widgets()
+        self.create_label_styles()
 
 
     def create_initial_widgets(self):
@@ -33,6 +34,12 @@ class Gui(ttk.Frame):
         self.price_label_frame = ttk.LabelFrame(self, text="")
         self.search_button.grid(column=0, row=1, pady=10, sticky="s")
         self.price_label_frame.grid(column=0, row=0, padx=10)
+
+    
+    def create_label_styles(self):
+        style = ttk.Style()
+        style.configure("Unique.TLabel", foreground="#AF6025")
+        style.configure("Rare.TLabel", foreground="#FFFF77")
 
     
     def create_listing_labels(self, resp):
@@ -48,10 +55,17 @@ class Gui(ttk.Frame):
         """Properly config the label frame."""
         if parsed_item["Rarity"] == "Unique":
             frame_label = f'{parsed_item["name"]}\n{parsed_item["type"]}'
+            label_text = ttk.Label(text=frame_label)
+            self.price_label_frame.config(labelwidget=label_text) 
+            label_text.configure(style="Unique.TLabel")
         else:
             frame_label = f'{parsed_item["type"]}'
-        self.price_label_frame.config(text=frame_label)    
+            label_text = ttk.Label(text=frame_label)
+            self.price_label_frame.config(labelwidget=label_text)
+            label_text.configure(style="Rare.TLabel")
+            
 
+        
 
     def display_item_image(self, resp):
         """Displays the item image from the URL."""
@@ -89,7 +103,8 @@ class Gui(ttk.Frame):
             self.listing_label = ttk.Label(self.price_label_frame, text="Listings:")
             self.listing_label.grid(column=0, row=1)
     
-        except:
+        except Exception as e:
+            print(e)
             self.except_label = ttk.Label(self.price_label_frame, text="Incorrect format of text in clipboard.")
             self.except_label.grid(column=0, row=0)
 
