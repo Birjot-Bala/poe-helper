@@ -29,14 +29,14 @@ def test_item_parser():
         'implicitMods': [
             '+25% to Global Critical Strike Multiplier (implicit)'
         ],
-            'Note': '~price 1 jewellers',
-            'explicitMods': [
-                '+8 to Dexterity',
-                '21% increased Physical Damage',
-                'Adds 1 to 4 Fire Damage',
-                'Adds 2 to 25 Lightning Damage', 
-                '+7% to Fire Resistance', 
-                '+8% to Chaos Resistance', 
-                '+32 to Accuracy Rating'
-            ]
+        'Note': '~price 1 jewellers',
+        'explicitMods': [
+            '+8 to Dexterity',
+            '21% increased Physical Damage',
+            'Adds 1 to 4 Fire Damage',
+            'Adds 2 to 25 Lightning Damage', 
+            '+7% to Fire Resistance', 
+            '+8% to Chaos Resistance', 
+            '+32 to Accuracy Rating'
+        ]
     }
