@@ -45,8 +45,9 @@ def item_parser(text):
     """
 
     text_list = [i.lstrip("\n").splitlines() for i in text.split("--------")]
-
-    text_dict = {text_list[idx].pop(idx_2).strip(":") : _dict_of_req(text_list, idx)  # create dictionary with key, value "requirements", list of requirements
+    # create dictionary with key, value "requirements", list of requirements
+    text_dict = {
+        text_list[idx].pop(idx_2).strip(":") : _dict_of_req(text_list, idx)  
         for idx, sublist in enumerate(text_list[:]) 
         for idx_2, item in enumerate(sublist[:]) 
         if item in ["Requirements:"]
@@ -65,7 +66,8 @@ def item_parser(text):
         text_list.remove(['Corrupted'])
 
     _item_parser_iterator(text_list, text_dict)
-    text_list = list(filter(None, text_list)) # remove all empty lists after parsing
+    text_list = list(filter(None, text_list)) 
+    # remove all empty lists after parsing
     
     if text_list:     # extract explicit mods if list is not empty
         text_dict["explicitMods"] = text_list[0]
@@ -78,7 +80,8 @@ def item_parser(text):
     return text_dict
 
 
-def _dict_of_req(text_list, idx):   # for use in dict comprehension turns the requirements into dicts as well
+def _dict_of_req(text_list, idx):   
+    # for use in dict comprehension turns the requirements into dicts as well
     req_list = text_list[idx][1:]
     req_dict = {}
     for req in req_list:
@@ -96,7 +99,8 @@ def _item_parser_iterator(text_list, text_dict):
             _item_parser_classify(i, text_list, text_dict=text_dict)
 
 
-def _item_parser_classify(i, text_list, text_dict): # identify and classify parts of the list
+def _item_parser_classify(i, text_list, text_dict): 
+    # identify and classify parts of the list
     if implicit_re.match(i) is not None:    # regex match to find implicit mods
         if "implicit" not in text_dict:
             text_dict["implicitMods"] = [i]

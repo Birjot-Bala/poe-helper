@@ -42,11 +42,9 @@ class ListingObject:
         df['price'] = d['listing']['price']
         return cls(df)
 
-
     def __init__(self, search_result):
         """The constructor for the ListingObject class."""
         self.listing = search_result
-
 
     def format_price(self):
         """Formats the price into a string."""
@@ -54,12 +52,10 @@ class ListingObject:
         price = f'{price_dict["type"]} {price_dict["amount"]} {price_dict["currency"]}'
         return price
 
-
     def rarity_type(self):
         """Returns the rarity of the item as a string."""
         rarity_dict = {0: 'Normal', 1: 'Magic', 2: 'Rare', 3: 'Unique'}
         return rarity_dict[self.listing['frameType']]
-
 
     def format_properties(self):
         """Formats the properties, if they exist, into a string."""
@@ -72,7 +68,6 @@ class ListingObject:
         else:
             return None
 
-
     def format_requirements(self):
         """Formats the requirements, if they exist, into a string."""
         if 'requirements' in self.listing:
@@ -83,7 +78,6 @@ class ListingObject:
             return formatted_requirements
         else:
             return None
-
 
     def format_sockets(self):
         """Formats the sockets, if they exist, into a string."""
@@ -101,7 +95,6 @@ class ListingObject:
         else:
             return None
 
-
     def format_implicitMods(self):
         """Format implicit mods, if they exist, into a string."""
         if 'implicitMods' in self.listing:
@@ -110,7 +103,6 @@ class ListingObject:
             return formatted_implicitMods
         else:
             return None
-
 
     def format_explicitMods(self):
         """Format explicit mods, if they exist, into a string."""
@@ -121,7 +113,6 @@ class ListingObject:
         else:
             return None
 
-
     def check_corruption(self):
         """Check if the item is corrupted."""
         if 'corrupted' in self.listing:
@@ -130,14 +121,12 @@ class ListingObject:
         else:
             return None
 
-
     def check_identified(self):
         """Check if the item is identified."""
         if 'identified' == False:
             return 'Unidentified'
         else:
             return None
-
 
     def item_info(self):
         """Returns the relevant item information."""
@@ -161,7 +150,6 @@ class ListingObject:
         filtered_item_info = [info for info in item_info if info is not None]
         formatted_item_info = '\n'.join(filtered_item_info)
         return formatted_item_info
-
 
     def item_icon(self):
         """Returns the link to the item icon"""
