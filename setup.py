@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="poe_helper",
-    version="0.1.dev",
+    version="0.1.1.dev",
     author="Birjot Bala",
     description="Look up items on the PoE Trade API",
     long_description=long_description,
