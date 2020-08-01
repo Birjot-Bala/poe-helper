@@ -105,8 +105,7 @@ class Gui(ttk.Frame):
             )
             self.listing_label.grid(column=0, row=1)
     
-        except Exception as e:
-            print(e)
+        except:
             self.except_label = ttk.Label(self.price_label_frame, 
                 text="Incorrect format of text in clipboard."
             )
