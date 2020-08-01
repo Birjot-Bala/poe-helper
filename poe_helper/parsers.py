@@ -29,9 +29,6 @@ ARMOUR_PROPERTIES = [
     "Evasion Rating:"
 ]
 
-# regex compile
-implicit_re = re.compile(r'.*(\(implicit\))$')
-
 
 def item_parser(text):
     """Parses item text copied from PoE Trade or the game.
@@ -100,6 +97,7 @@ def _item_parser_iterator(text_list, text_dict):
 
 
 def _item_parser_classify(i, text_list, text_dict): 
+    implicit_re = re.compile(r'.*(\(implicit\))$')
     # identify and classify parts of the list
     if implicit_re.match(i) is not None:    # regex match to find implicit mods
         if "implicit" not in text_dict:
