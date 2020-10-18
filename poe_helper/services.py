@@ -223,7 +223,7 @@ def create_search_query(parsed_item):
         }
     }
 
-    if parsed_item["Rarity"] == "unique":
+    if parsed_item["Rarity"] == "Unique":
         search_query_dict["query"]["name"] = parsed_item["name"]
 
     search_query_dict["query"]["type"] = parsed_item["type"]
