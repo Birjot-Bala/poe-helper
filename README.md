@@ -11,3 +11,5 @@ A tool to help search the PoE Trade API for items.
 - Currently the tool is able to search for uniques and rares without considering explicit mods and will show the prices for the first 10 results.
 
 - This is used mainly as a quick reference to gauge the value of random uniques and rares that are picked up. 
+
+- Added a discord bot variant of the application.
