@@ -14,7 +14,8 @@ setup(
     packages=["poe_helper"],
     install_requires=[
         "requests",
-        "Pillow"
+        "Pillow",
+        "discord.py"
     ],
     entry_points={
         "gui_scripts": [
