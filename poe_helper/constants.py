@@ -1,4 +1,4 @@
 # constants.py
 
-league = 'Heist'
+league = 'Ritual'
 TRADE_BASE_URL = 'https://www.pathofexile.com/api/trade/'

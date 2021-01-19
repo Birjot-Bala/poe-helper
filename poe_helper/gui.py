@@ -5,7 +5,8 @@ Classes:
     Gui
 
 """
-
+import traceback
+import sys
 import tkinter as tk
 from tkinter import ttk
 
@@ -105,7 +106,8 @@ class Gui(ttk.Frame):
             )
             self.listing_label.grid(column=0, row=1)
     
-        except:
+        except Exception:
+            print(traceback.format_exc())
             self.except_label = ttk.Label(self.price_label_frame, 
                 text="Incorrect format of text in clipboard."
             )

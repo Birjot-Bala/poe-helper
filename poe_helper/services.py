@@ -170,7 +170,6 @@ def search_trade_api(search_info, league=league):
 
     """
     post_response = post_request(TRADE_BASE_URL, 'search/' + league, search_info)
-    # post_response = trade_api.post('search/' + league, search_info)
     post_response = post_response.json()
     if 'error' in post_response:
         return post_response
@@ -181,8 +180,6 @@ def search_trade_api(search_info, league=league):
                 'query': post_response['id']
             }
         )
-        # get_response = trade_api.get(
-        #     'fetch/' + result, params={'query': post_response['id']})
         get_response = get_response.json()
         item_list = [
             ListingObject.filter_dict(item) for item in get_response['result']
@@ -260,7 +257,7 @@ def get_request(base_url, endpoint, params=None):
     """
 
     get_url = urljoin(base_url, endpoint)
-    response = requests.get(get_url, params=params, timeout=5)
+    response = requests.get(get_url, params=params, headers={'user-agent': 'poe-helper/0.1.1'}, timeout=5)
     return response
 
 
@@ -277,5 +274,5 @@ def post_request(base_url, endpoint, payload):
     """
 
     post_url = urljoin(base_url, endpoint)
-    response = requests.post(post_url, json=payload)
+    response = requests.post(post_url, json=payload, headers={'user-agent': 'poe-helper/0.1.1'})
     return response

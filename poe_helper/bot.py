@@ -24,6 +24,7 @@ async def price(ctx, *, arg):
             message += '\n' + listing.format_price()
         formatted_message = "```" + message + "```"
         await ctx.send(formatted_message)
-    except:
+    except Exception as e:
+        print(e.with_traceback)
         await ctx.send("Something went wrong. Make sure the item text " + 
             "has been pasted correctly.")
